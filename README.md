@@ -1,0 +1,1 @@
+This is built with React, TypeScript and Chakra UI.
