@@ -37,7 +37,7 @@ interface DataInterface {
     actions: string;
 }
 
-export default function Payable() {
+export default function Pay() {
     const [pageSize, setPageSize] = useState<number>(3);
     const [checkedItems, setCheckedItems] = useState<boolean[]>([true, true, true]);
     const [costCenter, setCostCenter] = useState<string>("");
