@@ -41,6 +41,7 @@ interface DataInterface {
 export default function Pay() {
     const [pageSize, setPageSize] = useState<number>(3);
     const [checkedItems, setCheckedItems] = useState<boolean[]>([true, true, true]);
+    const [status, setStatus] = useState<string[]>(["A pagar", "Paga", "Em atraso"]);
     const [costCenter, setCostCenter] = useState<string>("");
     const [category, setCategory] = useState<string>("Água");
     const [date, setDate] = useState<Date>(new Date());
@@ -272,7 +273,7 @@ export default function Pay() {
                                             values={["editar", "excluir"]}
                                         />
                                     </Box>
-                                    <DataTable columns={columns} data={data} pageSize={pageSize} costCenter={costCenter} category={category} date={date} />
+                                    <DataTable columns={columns} data={data} pageSize={pageSize} selection={true} costCenter={costCenter} category={category} date={date} />
                                 </Flex>
                             </ModalBody>
                             <ModalFooter>
@@ -294,21 +295,33 @@ export default function Pay() {
                         <Stack spacing={7} paddingEnd={7} direction={["column", "row"]}>
                             <Checkbox
                                 isChecked={checkedItems[0]}
-                                onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1], checkedItems[2]])}
+                                onChange={(e) => {
+                                    setCheckedItems([e.target.checked, checkedItems[1], checkedItems[2]]);
+                                    (e.target.checked === true) ? setStatus(["A pagar", status[1], status[2]]) :
+                                    setStatus(["", status[1], status[2]]);
+                                }}
                                 size="lg"
                             >
                                 A pagar
                             </Checkbox>
                             <Checkbox
                                 isChecked={checkedItems[1]}
-                                onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked, checkedItems[2]])}
+                                onChange={(e) => {
+                                    setCheckedItems([checkedItems[0], e.target.checked, checkedItems[2]]);
+                                    (e.target.checked === true) ? setStatus([status[0], "Paga", status[2]]) :
+                                    setStatus([status[0], "", status[2]]);
+                                }}
                                 size="lg"
                             >
                                 Pagas
                             </Checkbox>
                             <Checkbox
                                 isChecked={checkedItems[2]}
-                                onChange={(e) => setCheckedItems([checkedItems[0], checkedItems[1], e.target.checked])}
+                                onChange={(e) => {
+                                    setCheckedItems([checkedItems[0], checkedItems[1], e.target.checked]);
+                                    (e.target.checked === true) ? setStatus([status[0], status[1], "Em atraso"]) :
+                                    setStatus([status[0], status[1], ""]);
+                                }}
                                 size="lg"
                             >
                                 Em atraso
@@ -329,7 +342,7 @@ export default function Pay() {
                     </Box>
                 </Flex>
                 <Flex>
-                    <DataTable columns={columns} data={data} pageSize={pageSize} status={checkedItems} />
+                    <DataTable columns={columns} data={data} pageSize={pageSize} selection={true} status={status} />
                 </Flex>
             </Flex>
             <Flex
@@ -389,6 +402,6 @@ export default function Pay() {
                     </GridItem>
                 </Grid>
             </Flex>
-        </Box>
+        </Box >
     );
 }

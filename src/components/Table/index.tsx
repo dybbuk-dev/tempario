@@ -31,7 +31,8 @@ export type DataTableProps<TableItem extends object> = {
   columns: Column<TableItem>[];
   data: TableItem[];
   pageSize: number;
-  status?: boolean[];
+  selection?: boolean;
+  status?: string[];
   costCenter?: string;
   category?: string;
   date?: Date;
@@ -43,18 +44,19 @@ export function DataTable<TableItem extends object>({
   pageSize,
   status,
   costCenter,
+  selection,
   category,
   date,
   ...TableProps
 }: DataTableProps<TableItem>) {
 
   const statusGlobalFilterFunction = useCallback(
-    (rows: Row<TableItem>[], ids: IdType<TableItem>[], status: boolean[]) => {
+    (rows: Row<TableItem>[], ids: IdType<TableItem>[], status: string[]) => {
       return rows.filter(
         (row) => (
-          (status[0] === true ? row.values["status"].includes("A pagar") : null) ||
-          (status[1] === true ? row.values["status"].includes("Paga") : null) ||
-          (status[2] === true ? row.values["status"].includes("Em atraso") : null)
+          (status[0] !== "" ? row.values["status"].includes(status[0]) : null) ||
+          (status[1] !== "" ? row.values["status"].includes(status[1]) : null) ||
+          (status[2] !== "" ? row.values["status"].includes(status[2]) : null)
         )
       );
     },
@@ -89,27 +91,29 @@ export function DataTable<TableItem extends object>({
     usePagination,
     useRowSelect,
     (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        {
-          id: "selection",
-          width: '0.1%',
-          Header: ({
-            isAllRowsSelected,
-            selectedFlatRows,
-            toggleAllRowsSelected,
-          }: UseRowSelectInstanceProps<TableItem>) => (
-            <Checkbox
-              label=""
-              isChecked={isAllRowsSelected}
-              onChange={(e) => toggleAllRowsSelected(e.target.checked)}
-            />
-          ),
-          Cell: ({ row: { isSelected, toggleRowSelected } }: { row: UseRowSelectRowProps<TableItem> }) => {
-            return <Checkbox isChecked={isSelected} onChange={(e) => toggleRowSelected(e.target.checked)} />;
+      selection && selection === true ?
+        hooks.visibleColumns.push((columns) => [
+          {
+            id: "selection",
+            width: '0.1%',
+            Header: ({
+              isAllRowsSelected,
+              selectedFlatRows,
+              toggleAllRowsSelected,
+            }: UseRowSelectInstanceProps<TableItem>) => (
+              <Checkbox
+                label=""
+                isChecked={isAllRowsSelected}
+                onChange={(e) => toggleAllRowsSelected(e.target.checked)}
+              />
+            ),
+            Cell: ({ row: { isSelected, toggleRowSelected } }: { row: UseRowSelectRowProps<TableItem> }) => {
+              return <Checkbox isChecked={isSelected} onChange={(e) => toggleRowSelected(e.target.checked)} />;
+            },
           },
-        },
-        ...columns,
-      ]);
+          ...columns,
+        ]) :
+        hooks.visibleColumns.push((columns) => [...columns]);
     }
   )
   const {
@@ -164,7 +168,7 @@ export function DataTable<TableItem extends object>({
                   fontWeight="400"
                   {...row.getRowProps()}>
                   {row.cells.map(cell => {
-                    if (cell.column.Header === "STATUS") {
+                    if (cell.column.Header === "STATUS" && selection === true) {
                       return (
                         <Td {...cell.getCellProps()}>
                           <Flex align='center'>
@@ -173,11 +177,11 @@ export function DataTable<TableItem extends object>({
                               h='20px'
                               me='5px'
                               color={
-                                cell.value === "Paga"
+                                cell.value === "Paga" || cell.value === "Recebida"
                                   ? "#10D482"
                                   : cell.value === "Em atraso"
                                     ? "#EF3226"
-                                    : cell.value === "A pagar"
+                                    : cell.value === "A pagar" || cell.value === "A receber"
                                       ? "#EFDB26"
                                       : "white"
                               }
@@ -204,15 +208,53 @@ export function DataTable<TableItem extends object>({
                           </Flex>
                         </Td>
                       )
-                    } else if (cell.column.Header === "AÇÕES") {
+                    } else if (cell.column.Header === "TIPO") {
                       return (
-                        <Td {...cell.getCellProps()}>
-                          <Flex>
+                        <Td {...cell.getCellProps()} padding={2}>
+                          <Flex justifyContent="center">
                             <Button
                               border="none"
                               padding="0"
                               backgroundColor="transparent"
-                              marginEnd="3px"
+                            >
+                              {cell.value === "product" ? (
+                                <Image src="assets/images/icons/product.png" boxSize="21px" alt="edit" />
+                              ) : cell.value === "service" ? (
+                                <Image src="assets/images/icons/service.png" boxSize="21px" alt="edit" />
+                              ) : null}
+
+                            </Button>
+                          </Flex>
+                        </Td>
+                      );
+                    } else if (cell.column.Header === "AÇÕES") {
+                      return (
+                        <Td {...cell.getCellProps()} padding={2}>
+                          <Flex>
+                            {cell.value === "yellow" ? (
+                              <Button
+                                border="none"
+                                padding="0"
+                                backgroundColor="transparent"
+                                marginEnd="2px"
+                              >
+                                <Image src="assets/images/icons/usd-yellow.png" boxSize="21px" alt="edit" />
+                              </Button>
+                            ) : cell.value === "green" ? (
+                              <Button
+                                border="none"
+                                padding="0"
+                                backgroundColor="transparent"
+                                marginEnd="2px"
+                              >
+                                <Image src="assets/images/icons/usd-green.png" boxSize="21px" alt="edit" />
+                              </Button>
+                            ) : null}
+                            <Button
+                              border="none"
+                              padding="0"
+                              backgroundColor="transparent"
+                              marginEnd="2px"
                             >
                               <Image src="assets/images/icons/pencil.png" boxSize="21px" alt="edit" />
                             </Button>

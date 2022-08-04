@@ -7,7 +7,7 @@ import {
     Text,
     Checkbox
 } from "@chakra-ui/react";
-import React, { useState, useRef, useMemo, ChangeEvent } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "../components/Form/Input";
 import { Select } from "../components/Form/Select";
@@ -33,7 +33,7 @@ interface FormData {
 }
 
 const AddPayment: React.FC = () => {
-    const { register, handleSubmit, formState, setValue } = useForm();
+    const { register, handleSubmit, formState } = useForm();
     const { errors } = formState;
     const [competenceDate, setCompetenceDate] = useState<Date>(new Date());
     const [expirationDate, setExpirationDate] = useState<Date>(new Date());

@@ -41,6 +41,7 @@ interface DataInterface {
 export default function Receive() {
     const [pageSize, setPageSize] = useState<number>(3);
     const [checkedItems, setCheckedItems] = useState<boolean[]>([true, true, true]);
+    const [status, setStatus] = useState<string[]>(["A receber", "Recebida", "Em atraso"]);
     const [costCenter, setCostCenter] = useState<string>("");
     const [category, setCategory] = useState<string>("Água");
     const [date, setDate] = useState<Date>(new Date());
@@ -83,8 +84,8 @@ export default function Receive() {
         () => [
             {
                 date: "02/08/2022",
-                status: "Paga",
-                category: "Água",
+                status: "Recebida",
+                category: "Vendas",
                 costCenter: "Administrativo",
                 value: "R$130,00",
                 installment: "1/5",
@@ -92,8 +93,8 @@ export default function Receive() {
             },
             {
                 date: "03/08/2022",
-                status: "Paga",
-                category: "Água",
+                status: "Recebida",
+                category: "Vendas",
                 costCenter: "Administrativo",
                 value: "R$890,00",
                 installment: "2/1",
@@ -101,8 +102,8 @@ export default function Receive() {
             },
             {
                 date: "16/01/2022",
-                status: "A pagar",
-                category: "Água",
+                status: "A receber",
+                category: "Vendas",
                 costCenter: "Administrativo",
                 value: "R$984,00",
                 installment: "3/1",
@@ -110,8 +111,8 @@ export default function Receive() {
             },
             {
                 date: "17/01/2022",
-                status: "A pagar",
-                category: "Água",
+                status: "A receber",
+                category: "Vendas",
                 costCenter: "Administrativo",
                 value: "R$345,00",
                 installment: "2/2",
@@ -120,7 +121,7 @@ export default function Receive() {
             {
                 date: "18/01/2022",
                 status: "Em atraso",
-                category: "Água",
+                category: "Vendas",
                 costCenter: "Administrativo",
                 value: "R$900,00",
                 installment: "1/3",
@@ -129,7 +130,7 @@ export default function Receive() {
             {
                 date: "19/01/2022",
                 status: "Em atraso",
-                category: "Água",
+                category: "Vendas",
                 costCenter: "Administrativo",
                 value: "R$120,00",
                 installment: "1/2",
@@ -188,7 +189,7 @@ export default function Receive() {
                         Contas a receber
                     </Text>
                     <Spacer />
-                    <Link href="/pay/create" _hover={{ textDecoration: "none" }}>
+                    <Link href="/receive/create" _hover={{ textDecoration: "none" }}>
                         <Button
                             borderRadius="6px"
                             border="1px dashed #D8D8D8"
@@ -231,7 +232,7 @@ export default function Receive() {
                             name="categry"
                             label="Categoria:"
                             size="lg"
-                            values={["Água"]}
+                            values={["Vendas"]}
                             onChange={(e) => {
                                 setCategory(e.target.value)
                             }}
@@ -291,23 +292,35 @@ export default function Receive() {
                     <Spacer />
                     <CheckboxGroup>
                         <Stack spacing={7} paddingEnd={7} direction={["column", "row"]}>
-                            <Checkbox
+                        <Checkbox
                                 isChecked={checkedItems[0]}
-                                onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1], checkedItems[2]])}
+                                onChange={(e) => {
+                                    setCheckedItems([e.target.checked, checkedItems[1], checkedItems[2]]);
+                                    (e.target.checked === true) ? setStatus(["A receber", status[1], status[2]]) :
+                                    setStatus(["", status[1], status[2]]);
+                                }}
                                 size="lg"
                             >
-                                A pagar
+                                A receber
                             </Checkbox>
                             <Checkbox
                                 isChecked={checkedItems[1]}
-                                onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked, checkedItems[2]])}
+                                onChange={(e) => {
+                                    setCheckedItems([checkedItems[0], e.target.checked, checkedItems[2]]);
+                                    (e.target.checked === true) ? setStatus([status[0], "Recebida", status[2]]) :
+                                    setStatus([status[0], "", status[2]]);
+                                }}
                                 size="lg"
                             >
-                                Pagas
+                                Recebidas
                             </Checkbox>
                             <Checkbox
                                 isChecked={checkedItems[2]}
-                                onChange={(e) => setCheckedItems([checkedItems[0], checkedItems[1], e.target.checked])}
+                                onChange={(e) => {
+                                    setCheckedItems([checkedItems[0], checkedItems[1], e.target.checked]);
+                                    (e.target.checked === true) ? setStatus([status[0], status[1], "Em atraso"]) :
+                                    setStatus([status[0], status[1], ""]);
+                                }}
                                 size="lg"
                             >
                                 Em atraso
@@ -328,7 +341,7 @@ export default function Receive() {
                     </Box>
                 </Flex>
                 <Flex>
-                    <DataTable columns={columns} data={data} pageSize={pageSize} status={checkedItems} />
+                    <DataTable columns={columns} data={data} pageSize={pageSize} status={status} />
                 </Flex>
             </Flex>
             <Flex

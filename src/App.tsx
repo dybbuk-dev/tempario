@@ -6,6 +6,7 @@ import WorkshopArea from "./pages/WorkshopArea";
 import Home from "./pages/Home";
 import AddPayment from "./pages/AddPayment";
 import Receive from "./pages/Receive";
+import Invoice from "./pages/Invoice";
 
 const App: React.FC = () => {
     return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
                 <Route exact path="/pay" component={Pay} />
                 <Route exact path="/pay/create" component={AddPayment} />
                 <Route exact path="/receive" component={Receive} />
+                <Route exact path="/invoice" component={Invoice} />
                 <Route exact path="/workshoparea" component={WorkshopArea} />
                 <Route exact path='/' component={Home} />
             </Switch>
