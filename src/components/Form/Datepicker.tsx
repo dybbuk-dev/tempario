@@ -1,4 +1,4 @@
-import React, { useRef, useState, ReactNode } from "react";
+import React, { useRef, useState, ReactNode, forwardRef, ForwardRefRenderFunction } from "react";
 import lodash_isEmpty from "lodash/isEmpty";
 import lodash_map from "lodash/map";
 import lodash_isNil from "lodash/isNil";
@@ -203,24 +203,24 @@ const DatepickerCalendar = (
   );
 };
 
-export const Datepicker: React.FC<DatepickerProps> = ({
+const DatepickerBase: ForwardRefRenderFunction<HTMLElement, DatepickerProps> = ({
   configs = {
     dateFormat: DATE_FORMAT_DEFAULT,
     monthNames: MONTH_NAMES_DEFAULT,
     dayNames: DAY_NAMES_DEFAULT
   },
   ...props
-}) => {
+}, ref) => {
   const { date, name, label, disabled, onDateChange, id, size, required } = props;
 
-  const ref = useRef<HTMLElement>(null);
+  const defaultRef = useRef<HTMLElement>(null);
   const initialFocusRef = useRef<HTMLInputElement>(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   const icon: ReactNode = <CalendarIcon w={7} h={7} pt={1} pr={1} />;
 
   useOutsideClick({
-    ref: ref,
+    ref: defaultRef,
     handler: () => setPopoverOpen(false)
   });
 
@@ -282,7 +282,7 @@ export const Datepicker: React.FC<DatepickerProps> = ({
           </InputGroup>
         </FormControl>
       </PopoverTrigger>
-      <PopoverContent ref={ref}>
+      <PopoverContent ref={defaultRef}>
         <PopoverBody
           padding={"10px 5px"}
           focusBorderColor="gray.300"
@@ -296,3 +296,5 @@ export const Datepicker: React.FC<DatepickerProps> = ({
     </Popover>
   );
 };
+
+export const Datepicker = forwardRef(DatepickerBase);

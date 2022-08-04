@@ -1,4 +1,4 @@
-import { Link, Box, Flex } from "@chakra-ui/react";
+import { Link, Flex } from "@chakra-ui/react";
 import * as React from "react";
 
 const Home: React.FC = () => {

@@ -38,7 +38,7 @@ interface DataInterface {
     actions: string;
 }
 
-export default function Pay() {
+export default function Receive() {
     const [pageSize, setPageSize] = useState<number>(3);
     const [checkedItems, setCheckedItems] = useState<boolean[]>([true, true, true]);
     const [costCenter, setCostCenter] = useState<string>("");
@@ -154,7 +154,7 @@ export default function Pay() {
                 marginTop="30px"
             >
                 <Text>Você está aqui: </Text>
-                <Text fontWeight="bold">Financeiro / Contas a pagar</Text>
+                <Text fontWeight="bold">Financeiro / Contas a receber</Text>
             </Flex>
             <Box>
                 <Text
@@ -185,7 +185,7 @@ export default function Pay() {
                         lineHeight="132%"
                         color="#000"
                     >
-                        Contas a pagar
+                        Contas a receber
                     </Text>
                     <Spacer />
                     <Link href="/pay/create" _hover={{ textDecoration: "none" }}>
@@ -232,7 +232,6 @@ export default function Pay() {
                             label="Categoria:"
                             size="lg"
                             values={["Água"]}
-                            placeholder="Selecione"
                             onChange={(e) => {
                                 setCategory(e.target.value)
                             }}
