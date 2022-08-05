@@ -63,6 +63,15 @@ export function DataTable<TableItem extends object>({
     []
   );
 
+  const generalGlobalFunction = useCallback(
+    (rows: Row<TableItem>[], ids: IdType<TableItem>[]) => {
+      return rows.filter(
+        (row) => row.values
+      );
+    },
+    []
+  );
+
   const modalGlobalFilterFunction = useCallback(
     (rows: Row<TableItem>[], ids: IdType<TableItem>[], filters: { costCenter: string, category: string, date: Date }) => {
       const day: string = String(filters.date.getDay()).padStart(2, "0");
@@ -84,7 +93,7 @@ export function DataTable<TableItem extends object>({
     {
       columns,
       data,
-      globalFilter: status ? statusGlobalFilterFunction : modalGlobalFilterFunction
+      globalFilter: status ? statusGlobalFilterFunction : costCenter ? modalGlobalFilterFunction : generalGlobalFunction
     },
     useGlobalFilter,
     useSortBy,
@@ -131,7 +140,7 @@ export function DataTable<TableItem extends object>({
   }, [pageSize, setPageSize]);
 
   useEffect(() => {
-    status ? setGlobalFilter(status) : setGlobalFilter({ costCenter, category, date });
+    status ? setGlobalFilter(status) : costCenter ? setGlobalFilter({ costCenter, category, date }) : setGlobalFilter(true);
   }, [status, costCenter, category, date, setGlobalFilter]);
 
   return (

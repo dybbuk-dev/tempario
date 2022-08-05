@@ -43,7 +43,7 @@ export default function Receive() {
     const [checkedItems, setCheckedItems] = useState<boolean[]>([true, true, true]);
     const [status, setStatus] = useState<string[]>(["A receber", "Recebida", "Em atraso"]);
     const [costCenter, setCostCenter] = useState<string>("");
-    const [category, setCategory] = useState<string>("Água");
+    const [category, setCategory] = useState<string>("Vendas");
     const [date, setDate] = useState<Date>(new Date());
     const { isOpen, onOpen, onClose } = useDisclosure()
     const columns: Array<Column<DataInterface>> = useMemo(
@@ -272,7 +272,7 @@ export default function Receive() {
                                             values={["editar", "excluir"]}
                                         />
                                     </Box>
-                                    <DataTable columns={columns} data={data} pageSize={pageSize} costCenter={costCenter} category={category} date={date} />
+                                    <DataTable columns={columns} data={data} pageSize={pageSize} selection={true} costCenter={costCenter} category={category} date={date} />
                                 </Flex>
                             </ModalBody>
                             <ModalFooter>
@@ -341,7 +341,7 @@ export default function Receive() {
                     </Box>
                 </Flex>
                 <Flex>
-                    <DataTable columns={columns} data={data} pageSize={pageSize} status={status} />
+                    <DataTable columns={columns} data={data} pageSize={pageSize} status={status} selection={true} />
                 </Flex>
             </Flex>
             <Flex
