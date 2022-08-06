@@ -154,8 +154,6 @@ export function DataTable<TableItem extends object>({
           {headerGroups.map(headerGroup => (
             <Tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column: any) => (
-                // Add the sorting props to control sorting. For this example
-                // we can add them into the header props
                 <Th
                   color="#41556F"
                   fontSize="13px"

@@ -21,7 +21,6 @@ const FileUpload = (props: FileUploadProps) => {
 
     const addFile = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
-            // setImage(event.target.files[0]);
 
             const _files: any[] = files.slice(0, files.length);
             const file: any = event.target.files[0];
