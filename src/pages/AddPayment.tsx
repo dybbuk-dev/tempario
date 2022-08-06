@@ -271,21 +271,8 @@ const AddPayment: React.FC = () => {
                             </SimpleGrid>
                             <FileUpload
                                 label="Anexo:"
-                                accept="image/*"
-                                multiple
-                                register={register("file_")}
-                            >
-                                <Button
-                                    color="blue"
-                                    backgroundColor="transparent"
-                                    _hover={{ border: "none" }}
-                                    _focus={{ border: "none" }}
-                                    fontSize="12px"
-                                    fontWeight={600}
-                                >
-                                    + ADICIONAR ANEXO
-                                </Button>
-                            </FileUpload>
+                                name="+ ADICIONAR ANEXO"
+                            />
                             <Button
                                 colorScheme="blue"
                                 marginTop="30px"
